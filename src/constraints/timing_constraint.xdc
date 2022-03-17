@@ -3,7 +3,7 @@
 # Consider the max delay for worst case analysis
 set cclk_delay 7.5
 
-# Following are the SPI device parameters, taken from Spansion Data sheet 
+# Following are the SPI device parameters, taken from Spansion S25FL128S Data sheet 
 
 # Max Tco
 set tco_max 7
@@ -11,17 +11,18 @@ set tco_max 7
 set tco_min 1
 
 # Setup time requirement
-set tsu 2
+set tsu 3
 # Hold time requirement
-set th 3
+set th 2
 
 
 # Following are the board/trace delay numbers
 # Assumption is that all Data lines are matched
-set tdata_trace_delay_max 0.25
-set tdata_trace_delay_min 0.25
+#4cm / 15cm/nanosec => 0.26 nanosec
+set tdata_trace_delay_max 0.26
+set tdata_trace_delay_min 0.2
 
-set tclk_trace_delay_max 0.2
+set tclk_trace_delay_max 0.26
 set tclk_trace_delay_min 0.2
 
 

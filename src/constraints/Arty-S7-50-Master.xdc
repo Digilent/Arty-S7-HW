@@ -6,8 +6,11 @@
 ## Clock signal
 #set_property -dict { PACKAGE_PIN F14   IOSTANDARD LVCMOS33 } [get_ports { CLK12MHZ }]; #IO_L13P_T2_MRCC_15 Sch=uclk
 #create_clock -add -name sys_clk_pin -period 83.333 -waveform {0 41.667} [get_ports { CLK12MHZ }];
-set_property -dict {PACKAGE_PIN R2 IOSTANDARD SSTL135} [get_ports CLK100MHZ]
-create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+
+# Already constrained by MIG
+#set_property -dict {PACKAGE_PIN R2 IOSTANDARD SSTL135} [get_ports CLK100MHZ]
+#create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+
 
 ## Switches
 #set_property -dict { PACKAGE_PIN H14   IOSTANDARD LVCMOS33 } [get_ports { sw[0] }]; #IO_L20N_T3_A19_15 Sch=sw[0]
