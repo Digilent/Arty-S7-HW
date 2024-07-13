@@ -1,19 +1,14 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: Digilent Inc
+// Engineer: Arthur Brown
 // 
 // Create Date: 06/14/2024 11:13:34 AM
-// Design Name: 
+// Design Name: Clocking Wizard Testbed
 // Module Name: uart_transmitter
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
+// Target Devices: Arty S7
+// Tool Versions: 2023.1
+// Description: UART transmitter with AXI4-stream interface
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
@@ -25,7 +20,7 @@ module uart_transmitter #(
     parameter most_significant_bit_first = 0
 ) (
     input  logic       clk,
-    input  logic       resetn,
+    input  logic       resetn, // reset is active low asynchronously asserted and synchronously deasserted (in 'clk' domain)
     input  logic [7:0] s_axis_tdata,
     input  logic       s_axis_tvalid,
     input  logic       s_axis_tready,
@@ -44,7 +39,7 @@ module uart_transmitter #(
     logic bit_strobe;
     localparam integer bit_counter_max = 10;
     
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk, negedge resetn) begin
         if (resetn == 1'b0) begin
             state <= STATE_IDLE;
         end else begin
@@ -56,7 +51,7 @@ module uart_transmitter #(
     end
     assign s_axis_tready = (state == STATE_IDLE);
     
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk, negedge resetn) begin
         if (resetn == 1'b0) begin
             shift_register <= 'b0;
         end else if (state == STATE_IDLE && s_axis_tvalid == 1'b1) begin
@@ -77,7 +72,7 @@ module uart_transmitter #(
         end
     end
     
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk, negedge resetn) begin
         if (resetn == 1'b0) begin
             baud_counter <= 'b0;
         end else if (state == STATE_BUSY) begin
@@ -92,7 +87,7 @@ module uart_transmitter #(
     end
     assign bit_strobe = (baud_counter == baud_counter_max);
     
-    always_ff @(posedge clk) begin
+    always_ff @(posedge clk, negedge resetn) begin
         if (resetn == 1'b0) begin
             bit_counter <= 'b0;
         end else if (state == STATE_BUSY) begin

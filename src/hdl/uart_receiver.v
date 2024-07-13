@@ -1,19 +1,14 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
+// Company: Digilent Inc
+// Engineer: Arthur Brown
+//
 // Create Date: 06/06/2024 01:01:49 PM
-// Design Name: 
+// Design Name: Clocking Wizard Testbed
 // Module Name: uart_receiver
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
+// Target Devices: Arty S7
+// Tool Versions: 2023.1
+// Description: UART receiver with AXI4-stream interface
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
@@ -24,7 +19,7 @@ module uart_receiver #(
     parameter most_significant_bit_first = 0
 ) (
     input  wire       clk,
-    input  wire       resetn,
+    input  wire       resetn, // reset is active low asynchronously asserted and synchronously deasserted (in 'clk' domain)
     input  wire       uart_rx,
     output wire [7:0] m_axis_tdata,
     output wire       m_axis_tvalid,
@@ -44,7 +39,7 @@ module uart_receiver #(
     reg [1:0] state = 0;
     reg [7:0] output_register;
     
-    always @(posedge clk) begin: state_machine_reg
+    always @(posedge clk, negedge resetn) begin: state_machine_reg
         if (resetn == 1'b0) begin
             state <= 'b0;
         end else begin
@@ -69,7 +64,7 @@ module uart_receiver #(
         end
     end
     
-    always @(posedge clk) begin: baud_counter_reg
+    always @(posedge clk, negedge resetn) begin: baud_counter_reg
         if (resetn == 1'b0) begin
             baud_counter <= 'b0; 
         end else begin
@@ -84,7 +79,7 @@ module uart_receiver #(
         end
     end
     
-    always @(posedge clk) begin: bit_counter_reg
+    always @(posedge clk, negedge resetn) begin: bit_counter_reg
         if (resetn == 1'b0) begin
             bit_counter <= 'b0;
         end else if (state == STATE_SAMPLING) begin
@@ -98,7 +93,7 @@ module uart_receiver #(
         end
     end
     
-    always @(posedge clk) begin: shift_reg
+    always @(posedge clk, negedge resetn) begin: shift_reg
         if (resetn == 1'b0) begin
             shift_register <= 'b0;
         end else if (state == STATE_SAMPLING) begin
@@ -113,7 +108,7 @@ module uart_receiver #(
         end
     end
     
-    always @(posedge clk) begin: overflow_error_reg
+    always @(posedge clk, negedge resetn) begin: overflow_error_reg
         if (resetn == 1'b0) begin
             overflow <= 1'b0;
         end else if (state == STATE_FORWARD_TO_STREAM && uart_rx == 1'b0) begin
@@ -127,5 +122,5 @@ module uart_receiver #(
             assign m_axis_tdata = shift_register[stop_bits+:8];
         else
             assign m_axis_tdata = shift_register[7:0];
-        endgenerate
+    endgenerate
 endmodule
