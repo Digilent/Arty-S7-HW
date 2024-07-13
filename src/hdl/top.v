@@ -7,7 +7,7 @@
 // Create Date: 06/06/2024 12:42:27 PM
 // Design Name: Clocking Wizard Testbed
 // Module Name: top
-// Target Devices: Arty S7-50
+// Target Devices: Arty S7
 // Tool Versions: 2023.1
 // Description: Bridges a UART interface to the Clocking Wizard AXI registers, driving output registers with variable clocks,
 //              to explore what effect different clocking wizard settings have.

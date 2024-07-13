@@ -32,9 +32,9 @@
       },
       "project_parameters": {
         "ARCHITECTURE": [ { "value": "spartan7" } ],
-        "BASE_BOARD_PART": [ { "value": "digilentinc.com:arty-s7-25:part0:1.1" } ],
+        "BASE_BOARD_PART": [ { "value": "digilentinc.com:arty-s7-50:part0:1.1" } ],
         "BOARD_CONNECTIONS": [ { "value": "" } ],
-        "DEVICE": [ { "value": "xc7s25" } ],
+        "DEVICE": [ { "value": "xc7s50" } ],
         "PACKAGE": [ { "value": "csga324" } ],
         "PREFHDL": [ { "value": "VERILOG" } ],
         "SILICON_REVISION": [ { "value": "" } ],
