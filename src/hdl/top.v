@@ -256,7 +256,11 @@ module top #(
                 .kStages   (2),
                 .kOutputFF (0)
             ) sync_inst (
-                .aRst   (resetn),
+                // Note: The locked signal is or-ed into the reset so that the output registers are reset to a known
+                //       state whenever the clocking wizard is reprogrammed. This also acts as a power-on reset,
+                //       putting the outputs to 0 when the board is powered on regardless of the state of the reset
+                //       button.
+                .aRst   (resetn | locked),
                 .OutClk (clk_out[i]),
                 .aoRst  (sync_resetn[i])
             );
